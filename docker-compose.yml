@@ -1,0 +1,14 @@
+services:
+  cmas:
+    build: .
+    restart: unless-stopped
+    ports:
+      - "8000:8000"
+    environment:
+      DATABASE_URL: sqlite:////app/data/cmas.db
+      CMAS_SECRET_KEY: ${CMAS_SECRET_KEY:-replace_with_long_random_secret}
+      CMAS_CEO_PASSWORD: ${CMAS_CEO_PASSWORD:-CmasCEO@123}
+      CMAS_ASSISTANT_PASSWORD: ${CMAS_ASSISTANT_PASSWORD:-CmasAssist@123}
+      CMAS_DEMO_DATA: ${CMAS_DEMO_DATA:-1}
+    volumes:
+      - ./data:/app/data

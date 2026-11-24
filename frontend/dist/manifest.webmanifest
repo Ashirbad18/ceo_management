@@ -1,0 +1,10 @@
+{
+  "name": "CMAS — CEO Management Action System",
+  "short_name": "CMAS",
+  "description": "Executive meetings, decisions, action tracking and accountability.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#f5f7fb",
+  "theme_color": "#14243a",
+  "orientation": "any"
+}

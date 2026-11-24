@@ -1,0 +1,2319 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <meta name="theme-color" content="#14243a"/>
+  <link rel="manifest" href="/manifest.webmanifest"/>
+  <link rel="icon" href="/cmas-icon.svg"/>
+  <title>CMAS — Daily CEO Management System</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap">
+  <style>
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap');
+:root{font-family:'DM Sans',sans-serif;color:#17243a;background:#f5f7fb;font-synthesis:none;font-optical-sizing:auto}
+*{box-sizing:border-box}body{margin:0}button,input,select,textarea{font:inherit}button{cursor:pointer}
+.app-shell{min-height:100vh}
+.sidebar{width:260px;position:fixed;inset:0 0 0 0;background:#14243a;color:#f3f6fb;display:flex;flex-direction:column;padding:22px 16px;z-index:20}
+.brand-row{display:flex;align-items:center;gap:11px;padding:2px 10px 25px}
+.brand-mark{width:40px;height:40px;background:linear-gradient(135deg,#e0b66d,#c68a37);color:#14243a;border-radius:12px;display:grid;place-items:center;font-family:Manrope;font-weight:800;font-size:14px;letter-spacing:-.5px}
+.brand-row b{font-family:Manrope;display:block;font-size:16px;letter-spacing:.3px}
+.brand-row small{display:block;color:#9caec4;font-size:11px;margin-top:2px}
+.nav-label{font-size:10px;letter-spacing:1.5px;color:#7d91aa;font-weight:700;padding:10px 12px 8px}
+.sidebar nav{display:flex;flex-direction:column;gap:5px}
+.nav-item{border:0;background:transparent;color:#afbdd0;display:flex;align-items:center;gap:12px;padding:10px 12px;border-radius:10px;font-size:13px;text-align:left;transition:.15s;position:relative}
+.nav-item:hover{background:#20364f;color:#fff}
+.nav-item.active{background:#253c57;color:#fff;font-weight:600}
+.nav-dot{margin-left:auto;width:6px;height:6px;border-radius:50%;background:#e0b66d}
+.nav-badge{margin-left:auto;background:#e0b66d;color:#14243a;font-size:10px;font-weight:800;padding:2px 7px;border-radius:12px;line-height:1.2}
+.nav-badge.alert{background:#e75a4d;color:#fff}
+.sidebar-bottom{margin-top:auto}
+.system-status{padding:14px 12px;border-top:1px solid #293c54;color:#a9bacd;font-size:11px}
+.status-light{width:7px;height:7px;display:inline-block;border-radius:50%;background:#41c98b;margin-right:7px}
+.system-status small{display:block;margin:6px 14px;color:#71859d}
+.user-profile{display:flex;align-items:center;gap:10px;padding:10px;background:#20354d;border-radius:11px;color:#fff;border:0;width:100%;text-align:left}
+.avatar{width:32px;height:32px;border-radius:50%;display:grid;place-items:center;background:#dce7f6;color:#20334c;font-weight:700;font-size:12px}
+.user-meta{flex:1;min-width:0}.user-meta b{display:block;font-size:12px}.user-meta small{display:block;color:#a9bbce;font-size:10px;margin-top:2px}
+.icon-btn{border:0;background:transparent;color:inherit;display:grid;place-items:center;width:34px;height:34px;border-radius:9px;position:relative;transition:.15s}
+.icon-btn:hover{background:#e9eef5;color:#243a53}
+.icon-btn.danger:hover{background:#fde8e8;color:#c83232}
+.sidebar .icon-btn:hover{background:#304761}
+.mobile-close,.mobile-menu{display:none}
+.main{margin-left:260px;min-height:100vh}
+.topbar{height:66px;background:#fff;border-bottom:1px solid #e6ebf1;display:flex;align-items:center;justify-content:space-between;padding:0 32px;position:sticky;top:0;z-index:10}
+.breadcrumb{display:flex;align-items:center;gap:10px;color:#8794a6;font-size:12px}.breadcrumb b{color:#ccd4df}.breadcrumb strong{color:#26374d;font-weight:600}
+.top-actions{display:flex;align-items:center;gap:17px}
+.today-label{font-size:12px;color:#728094}
+.notification-dot{position:absolute;right:8px;top:8px;width:6px;height:6px;background:#e0a54f;border-radius:50%;border:1px solid white}
+.top-avatar{width:30px;height:30px}
+.content{padding:28px 32px 50px;max-width:1440px;margin:auto}
+.page-heading{display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:20px;gap:20px;flex-wrap:wrap}
+.page-heading-actions{display:flex;gap:10px;align-items:center}
+.eyebrow{font-size:10px;letter-spacing:1.7px;font-weight:700;color:#8a9aad;margin:0 0 6px}
+.page-heading h1{font-family:Manrope;font-size:25px;letter-spacing:-.7px;margin:0;color:#18273c;font-weight:750}
+.subheading{font-size:13px;color:#8491a3;margin:5px 0 0}
+.primary{border:0;background:#17324d;color:#fff;border-radius:9px;padding:9px 14px;display:inline-flex;align-items:center;justify-content:center;gap:8px;font-weight:600;font-size:12px;box-shadow:0 3px 8px #122b441a;transition:.15s}
+.primary:hover{background:#244764;transform:translateY(-1px)}
+.primary.full{width:100%;padding:12px}
+.secondary{border:1px solid #dce3ec;background:#fff;color:#394b60;border-radius:9px;padding:9px 14px;font-size:12px;font-weight:600;display:inline-flex;align-items:center;gap:6px;transition:.15s}
+.secondary:hover{background:#f8fafc;border-color:#cbd5e1}
+.secondary:disabled{opacity:.65;cursor:not-allowed}
+.danger-btn{border:1px solid #f8d7da;background:#fff;color:#dc3545;border-radius:9px;padding:9px 14px;font-size:12px;font-weight:600;display:inline-flex;align-items:center;gap:6px;transition:.15s}
+.danger-btn:hover{background:#fdf2f2;border-color:#f5c6cb}
+.danger-btn.solid{background:#dc3545;color:#fff;border:0}
+.danger-btn.solid:hover{background:#bd2130}
+.btn-sm{padding:6px 10px;font-size:11px;border-radius:7px}
+.metric-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px;margin-bottom:20px}
+.metric{background:#fff;border:1px solid #e7ecf2;border-radius:13px;padding:17px 18px;min-height:120px;box-shadow:0 4px 16px #19355204}
+.metric-top{display:flex;justify-content:space-between;align-items:center;color:#77879a;font-size:11px;font-weight:600}
+.metric-icon{width:34px;height:34px;border-radius:9px;display:grid;place-items:center}
+.metric-icon svg{width:17px;height:17px}
+.metric.blue .metric-icon{background:#e8f1fd;color:#3e79c2}
+.metric.amber .metric-icon{background:#fff3de;color:#bd8834}
+.metric.green .metric-icon{background:#e4f7ee;color:#39a576}
+.metric.red .metric-icon{background:#fff0ee;color:#d66d63}
+.metric-value{font-family:Manrope;font-size:27px;font-weight:800;color:#1c2d43;margin-top:10px;line-height:1}
+.metric-note{font-size:10px;color:#9aa6b5;margin-top:6px}
+.dashboard-grid{display:grid;grid-template-columns:1.05fr 1fr;gap:15px;margin-bottom:17px}
+.panel{background:#fff;border:1px solid #e7ecf2;border-radius:13px;padding:18px 19px;box-shadow:0 4px 16px #19355204;margin-bottom:18px}
+.panel-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:17px;flex-wrap:wrap;gap:10px}
+.panel-head h2{font-family:Manrope;font-size:15px;margin:0;color:#1d2e43;display:flex;align-items:center;gap:8px}
+.panel-head p{margin:4px 0 0;font-size:11px;color:#8b98a8}
+.text-btn{background:transparent;border:0;color:#57779a;font-weight:600;font-size:11px;display:flex;align-items:center;gap:5px;cursor:pointer}
+.text-btn:hover{color:#1d2e43}
+.progress-summary{display:flex;align-items:center;gap:25px;padding:5px 5px 4px}
+.progress-ring{width:112px;height:112px;border-radius:50%;background:conic-gradient(#3b9d78 0 62%,#e8edf3 62% 100%);display:flex;flex-direction:column;align-items:center;justify-content:center;position:relative;flex-shrink:0}
+.progress-ring:before{content:'';position:absolute;width:88px;height:88px;border-radius:50%;background:#fff}
+.progress-ring span,.progress-ring small{z-index:1}.progress-ring span{font-family:Manrope;font-weight:800;font-size:22px;color:#1e3349}.progress-ring small{font-size:9px;color:#91a0b1;margin-top:1px}
+.legend-list{flex:1;display:grid;gap:11px}.legend-row{display:flex;align-items:center;gap:8px;font-size:11px;color:#6f7e91}.legend-row b{margin-left:auto;color:#34475f;font-size:12px}
+.legend-dot{width:8px;height:8px;border-radius:50%}
+.legend-dot.green{background:#3b9d78}.legend-dot.blue{background:#6d9bd6}.legend-dot.gray{background:#a8b4c3}.legend-dot.red{background:#e07c70}
+.quick-actions{display:grid;gap:9px}
+.quick-actions button{display:flex;align-items:center;gap:11px;padding:9px 10px;border:1px solid #edf0f4;border-radius:10px;background:#fff;text-align:left;color:#7f8da0}
+.quick-actions button:hover{border-color:#d7e0eb;background:#f9fbfd}
+.quick-actions button>svg{margin-left:auto;width:16px}
+.quick-actions span{display:flex;flex-direction:column;gap:3px;flex:1}
+.quick-actions b{color:#25364b;font-size:12px}.quick-actions small{color:#91a0b0;font-size:10px}
+.quick-icon{width:34px;height:34px;display:grid;place-items:center;border-radius:9px}
+.quick-icon svg{width:17px;height:17px}
+.blue-bg{background:#eaf2fd;color:#4e84c8}.purple-bg{background:#f0eafd;color:#8063c6}.green-bg{background:#e7f6ee;color:#43a578}
+.table-panel{margin-bottom:18px}
+.table-wrap{overflow-x:auto}
+table{width:100%;border-collapse:collapse;white-space:nowrap}
+thead th{font-size:9px;letter-spacing:.6px;text-transform:uppercase;color:#9aa6b5;text-align:left;font-weight:700;padding:11px 12px;background:#fafbfd;border-bottom:1px solid #edf0f4}
+tbody td{padding:12px;font-size:11px;color:#65758a;border-bottom:1px solid #f0f2f5}
+tbody tr{cursor:pointer;transition:.1s}
+tbody tr:hover{background:#fafcff}
+tbody tr:last-child td{border-bottom:0}
+.task-title{display:flex;flex-direction:column;gap:4px;max-width:280px}
+.task-title b{font-size:11px;color:#25364c;white-space:normal;line-height:1.35}
+.task-title small,.cell-sub{font-size:9px;color:#9aa7b6;margin-top:3px;display:block}
+.status,.priority{display:inline-block;padding:3px 8px;border-radius:20px;font-size:9px;font-weight:700;line-height:1.3}
+.status.not-started{background:#f0f3f6;color:#6d7b8c}
+.status.in-progress{background:#e8f1fd;color:#427bbd}
+.status.under-review{background:#fff4df;color:#b18131}
+.status.completed{background:#e6f6ee;color:#39956e}
+.status.overdue{background:#ffefed;color:#c96459}
+.status.on-hold{background:#f0eafd;color:#8063c6}
+.priority.low{background:#f0f3f6;color:#7d8a99}
+.priority.medium{background:#fff5e6;color:#b5843c}
+.priority.high{background:#ffefed;color:#cb665c}
+.priority.critical{background:#ffe4e1;color:#b33c32}
+.mini-progress{display:flex;align-items:center;gap:6px}
+.mini-progress>div{width:58px;height:5px;background:#edf1f5;border-radius:5px;overflow:hidden}
+.mini-progress>div span{display:block;height:100%;background:#4d91c6;border-radius:5px}
+.mini-progress small{font-size:9px;color:#8795a5}
+.empty{text-align:center;padding:30px!important;color:#99a5b4;font-size:12px}
+
+/* Date Bar & Daily Register */
+.date-nav-bar{background:#fff;border:1px solid #e7ecf2;border-radius:12px;padding:12px 18px;display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;gap:12px;flex-wrap:wrap}
+.date-nav-controls{display:flex;align-items:center;gap:8px}
+.date-nav-btn{border:1px solid #dce4ed;background:#fff;color:#35495e;padding:6px 12px;border-radius:8px;font-size:11px;font-weight:600;display:inline-flex;align-items:center;gap:5px;transition:.15s}
+.date-nav-btn:hover{background:#f2f5f9;border-color:#c8d4e2}
+.date-nav-btn.today-btn{background:#17324d;color:#fff;border-color:#17324d}
+.date-nav-btn.today-btn:hover{background:#23466a}
+.date-indicator{display:flex;align-items:center;gap:10px}
+.date-indicator h2{margin:0;font-family:Manrope;font-size:16px;color:#18283d;font-weight:750}
+.date-badge{font-size:10px;font-weight:700;padding:3px 9px;border-radius:12px;display:inline-flex;align-items:center;gap:5px}
+.date-badge.today{background:#e7f6ee;color:#2f855a}
+.date-badge.history{background:#f0f4f8;color:#5a6e85}
+.date-picker-input{border:1px solid #dce4ed;border-radius:8px;padding:5px 9px;font-size:11px;color:#35495e;background:#fff;outline:none}
+
+/* Meeting Cards */
+.meeting-card-list{display:grid;gap:14px}
+.meeting-card{background:#fff;border:1px solid #e7ecf2;border-radius:12px;padding:18px;box-shadow:0 3px 12px #19355204;transition:.15s}
+.meeting-card:hover{border-color:#cfdbe7}
+.meeting-card-head{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin-bottom:12px;flex-wrap:wrap}
+.meeting-card-title{display:flex;flex-direction:column;gap:3px}
+.meeting-card-title h3{margin:0;font-size:14px;color:#1a2b3f;font-family:Manrope;font-weight:750}
+.meeting-card-tags{display:flex;gap:6px;align-items:center;margin-top:4px;flex-wrap:wrap}
+.tag-pill{font-size:10px;padding:2px 8px;border-radius:6px;background:#edf2f7;color:#4a5568;font-weight:600}
+.tag-pill.time{background:#eaf2fd;color:#2b6cb0}
+.tag-pill.dept{background:#f0ebf8;color:#6b46c1}
+.tag-pill.type{background:#e6fffa;color:#234e52}
+.tag-pill.loc{background:#fffaf0;color:#7b341e}
+.meeting-card-actions{display:flex;gap:6px;align-items:center}
+.meeting-card-body{display:grid;gap:10px;font-size:12px;color:#4a5568;background:#f8fafc;padding:12px 14px;border-radius:9px;margin-bottom:12px}
+.meeting-detail-row{display:flex;flex-direction:column;gap:3px}
+.meeting-detail-row b{font-size:10px;text-transform:uppercase;letter-spacing:.6px;color:#718096}
+.meeting-detail-row p{margin:0;font-size:12px;line-height:1.45;color:#2d3748}
+.meeting-tasks-box{border-top:1px solid #edf2f7;padding-top:12px}
+.meeting-tasks-box h4{margin:0 0 8px;font-size:11px;text-transform:uppercase;letter-spacing:.6px;color:#718096;display:flex;align-items:center;justify-content:space-between}
+.meeting-task-item{display:flex;justify-content:space-between;align-items:center;padding:8px 10px;border-radius:8px;background:#fff;border:1px solid #edf2f7;margin-bottom:6px;gap:10px;font-size:11px}
+.meeting-task-item:last-child{margin-bottom:0}
+
+/* Previous Meeting Review Cards */
+.review-tab-bar{display:flex;gap:8px;border-bottom:1px solid #edf2f7;padding-bottom:12px;margin-bottom:16px;flex-wrap:wrap}
+.review-tab{border:0;background:transparent;color:#718096;font-size:12px;font-weight:600;padding:7px 13px;border-radius:8px;display:inline-flex;align-items:center;gap:7px;transition:.15s}
+.review-tab:hover{background:#edf2f7;color:#2d3748}
+.review-tab.active{background:#17324d;color:#fff}
+.tab-badge{font-size:10px;padding:2px 6px;border-radius:10px;background:#edf2f7;color:#4a5568;font-weight:700}
+.review-tab.active .tab-badge{background:#e0b66d;color:#14243a}
+.tab-badge.danger{background:#e53e3e;color:#fff}
+
+.review-card-list{display:grid;gap:14px}
+.review-card{background:#fff;border:1px solid #e2e8f0;border-radius:13px;padding:18px 20px;box-shadow:0 3px 12px #19355204;transition:.15s}
+.review-card:hover{border-color:#cbd5e0;box-shadow:0 5px 18px #19355208}
+.review-card-top{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin-bottom:12px;flex-wrap:wrap}
+.review-origin-box{background:#f7fafc;border:1px solid #edf2f7;border-radius:8px;padding:9px 13px;font-size:11px;color:#4a5568;margin-bottom:13px;display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}
+.review-origin-box strong{color:#1a202c}
+.review-reason-box{background:#fffaf0;border-left:3px solid #dd6b20;padding:9px 12px;border-radius:0 8px 8px 0;font-size:11px;color:#7b341e;margin-bottom:13px;display:flex;align-items:center;gap:8px}
+.review-reason-box.today{background:#f0fff4;border-left-color:#38a169;color:#22543d}
+.review-reason-box.overdue{background:#fff5f5;border-left-color:#e53e3e;color:#742a2a}
+.review-meta-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;background:#f8fafc;padding:11px 14px;border-radius:8px;margin-bottom:13px;font-size:11px}
+.review-meta-item{display:flex;flex-direction:column;gap:3px}
+.review-meta-item small{font-size:9px;text-transform:uppercase;letter-spacing:.5px;color:#718096}
+.review-meta-item b{color:#2d3748;font-size:11px}
+.review-action-row{display:flex;justify-content:space-between;align-items:center;gap:10px;padding-top:10px;border-top:1px solid #edf2f7;flex-wrap:wrap}
+
+/* Common toolbar & controls */
+.toolbar{display:flex;gap:10px;margin-bottom:16px;flex-wrap:wrap}
+.searchbox{display:flex;align-items:center;gap:9px;border:1px solid #e2e8f0;background:#fff;border-radius:9px;padding:0 11px;min-width:240px;color:#98a5b4;flex:1}
+.searchbox input{border:0;outline:0;height:36px;width:100%;font-size:12px;color:#26374c}
+.toolbar select{border:1px solid #e2e8f0;background:#fff;border-radius:9px;padding:0 12px;font-size:11px;color:#65758a;height:36px}
+.department-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.department-card{background:#fff;border:1px solid #e7ecf2;border-radius:12px;padding:16px;display:flex;align-items:center;gap:11px;cursor:pointer;transition:.15s}
+.department-card:hover{border-color:#c8d7e6;transform:translateY(-1px)}
+.dept-icon{width:37px;height:37px;background:#edf3fa;color:#537ba5;border-radius:10px;display:grid;place-items:center}
+.department-card h3{font-size:12px;margin:0 0 4px;color:#26384e}
+.department-card small{font-size:9px;color:#8c9aaa}
+.dept-count{margin-left:auto;text-align:right;display:flex;flex-direction:column}
+.dept-count b{font-size:15px;color:#273b52}.dept-count small{font-size:9px;color:#8c9aaa}
+.report-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}
+.report-card{background:#fff;border:1px solid #e7ecf2;border-radius:13px;padding:20px;display:flex;flex-direction:column;min-height:220px}
+.report-icon{width:42px;height:42px;background:#eaf2fd;color:#4c82c3;border-radius:11px;display:grid;place-items:center}
+.report-card h3{font-family:Manrope;font-size:14px;margin:15px 0 7px;color:#23354a}
+.report-card p{font-size:11px;color:#8492a4;line-height:1.6;margin:0 0 18px}
+.report-card button{margin-top:auto;align-self:flex-start}
+.error-banner{background:#fff0ee;color:#c86157;border:1px solid #f6d8d4;padding:10px 13px;border-radius:9px;font-size:11px;display:flex;justify-content:space-between;margin-bottom:13px}
+.error-banner button{border:0;background:none;color:inherit}
+
+/* Modal styling */
+.modal-backdrop{position:fixed;inset:0;background:#0e1b2a8c;z-index:50;display:grid;place-items:center;padding:20px}
+.modal{width:min(760px,100%);max-height:90vh;overflow:auto;background:#fff;border-radius:16px;box-shadow:0 20px 70px #0a182a55;padding:24px}
+.modal-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px}
+.modal-head h2{font-family:Manrope;font-size:17px;margin:0;color:#1c2d42;display:flex;align-items:center;gap:8px}
+.form-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}
+.field{display:flex;flex-direction:column;gap:6px;font-size:11px;color:#617187}
+.field.wide{grid-column:1/-1}
+.field input,.field select,.field textarea{border:1px solid #dfe6ee;border-radius:8px;padding:9px 10px;font-size:12px;outline:none;color:#293b50;background:#fff;width:100%}
+.field input:focus,.field select:focus,.field textarea:focus{border-color:#7da5cb;box-shadow:0 0 0 3px #eaf2fa}
+.field textarea{resize:vertical}
+.form-actions{grid-column:1/-1;display:flex;justify-content:flex-end;gap:8px;padding-top:12px;border-top:1px solid #edf0f4;margin-top:6px}
+
+/* Login */
+.login-shell{min-height:100vh;display:grid;grid-template-columns:1.15fr .85fr;background:#f6f8fb}
+.login-art{background:#14243a;color:#fff;position:relative;padding:42px 7vw;display:flex;flex-direction:column;justify-content:space-between;overflow:hidden}
+.login-art:after{content:'';position:absolute;width:500px;height:500px;border-radius:50%;border:1px solid #31465f;right:-190px;bottom:-170px;box-shadow:0 0 0 60px #1a2e45,0 0 0 120px #20354c33}
+.login-brand{display:flex;align-items:center;gap:12px;font-family:Manrope;font-weight:800;letter-spacing:1px}
+.login-message{max-width:550px;z-index:1}
+.login-message .eyebrow{color:#d5ad69}
+.login-message h1{font-family:Manrope;font-size:clamp(30px,4vw,51px);line-height:1.15;letter-spacing:-1.5px;margin:10px 0 15px}
+.login-message>p:not(.eyebrow){color:#a9bbce;font-size:14px;line-height:1.6;max-width:450px}
+.login-stat{display:flex;gap:35px;margin-top:42px}
+.login-stat span{display:flex;flex-direction:column;gap:6px}
+.login-stat b{font-size:13px}
+.login-stat small{font-size:10px;color:#8fa4bb}
+.login-card{align-self:center;justify-self:center;width:min(380px,90%);background:#fff;padding:38px 36px;border-radius:18px;box-shadow:0 15px 55px #16324b0a}
+.brand-mark.small{width:35px;height:35px;border-radius:10px;font-size:12px}
+.login-card h2{font-family:Manrope;font-size:23px;margin:20px 0 6px;color:#1d2f44}
+.login-card>p{font-size:12px;color:#8996a6;margin:0 0 24px}
+.login-card label{display:flex;flex-direction:column;gap:7px;font-size:11px;color:#63738a;margin-bottom:15px}
+.login-card input{border:1px solid #dfe6ee;border-radius:9px;padding:11px;font-size:12px;outline:none}
+.login-card input:focus{border-color:#7da5cb;box-shadow:0 0 0 3px #eaf2fa}
+.login-hint{font-size:10px;color:#9ba7b5;text-align:center;margin-top:14px}
+.error{font-size:11px;color:#c65e54;background:#fff0ee;border-radius:8px;padding:9px;margin-bottom:12px}
+
+@media(max-width:1120px){
+  .content{padding:24px}
+  .metric-grid{grid-template-columns:repeat(2,1fr)}
+  .department-grid{grid-template-columns:repeat(2,1fr)}
+  .topbar{padding:0 24px}
+  .review-meta-grid{grid-template-columns:repeat(2,1fr)}
+}
+@media(max-width:780px){
+  .sidebar{transform:translateX(-100%);transition:.2s;width:265px;box-shadow:none}
+  .sidebar.open{transform:translateX(0);box-shadow:20px 0 50px #0c1b2a40}
+  .mobile-menu,.mobile-close{display:grid}
+  .main{margin-left:0}
+  .topbar{height:58px;padding:0 16px}
+  .today-label{display:none}
+  .content{padding:20px 15px 35px}
+  .page-heading{align-items:flex-start;flex-direction:column}
+  .page-heading h1{font-size:22px}
+  .page-heading-actions{width:100%;justify-content:flex-start}
+  .metric-grid{gap:10px}
+  .metric{padding:13px;min-height:110px}
+  .metric-value{font-size:24px}
+  .dashboard-grid{grid-template-columns:1fr}
+  .panel{padding:15px}
+  .department-grid{grid-template-columns:1fr}
+  .report-grid{grid-template-columns:1fr}
+  .toolbar{flex-wrap:wrap}
+  .toolbar .searchbox{min-width:100%}
+  .toolbar select{height:36px}
+  .login-shell{grid-template-columns:1fr;background:#f7f9fc}
+  .login-art{min-height:280px;padding:25px 25px 20px}
+  .login-message h1{font-size:30px}
+  .login-message>p:not(.eyebrow){font-size:12px}
+  .login-stat{gap:20px;margin-top:25px}
+  .login-card{margin:30px 0;padding:28px 25px}
+  .form-grid{grid-template-columns:1fr}
+  .field.wide{grid-column:auto}
+  .modal{padding:18px}
+  .progress-summary{gap:16px}
+  .review-meta-grid{grid-template-columns:1fr}
+}
+@media(max-width:420px){
+  .metric-grid{grid-template-columns:repeat(2,1fr)}
+  .top-actions{gap:8px}
+  .breadcrumb{font-size:11px}
+  .page-heading h1{font-size:20px}
+  .progress-summary{flex-direction:column}
+  .legend-list{width:100%}
+  .date-nav-bar{flex-direction:column;align-items:stretch}
+  .date-nav-controls{justify-content:center}
+}
+  </style>
+  <script type="importmap">
+  {
+    "imports": {
+      "react": "https://esm.sh/react@18.3.1",
+      "react-dom/client": "https://esm.sh/react-dom@18.3.1/client",
+      "lucide-react": "https://esm.sh/lucide-react@0.468.0?deps=react@18.3.1"
+    }
+  }
+  </script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+</head>
+<body>
+  <div id="root">
+    <div style="min-height:100vh;display:flex;align-items:center;justify-content:center;background:#f5f7fb;font-family:'DM Sans',sans-serif;">
+      <div style="text-align:center;padding:30px;background:#fff;border-radius:14px;box-shadow:0 4px 20px rgba(0,0,0,0.05);">
+        <h2 style="font-family:'Manrope',sans-serif;margin:0 0 10px;color:#14243a;">Loading Daily CEO Management System...</h2>
+        <p style="color:#728094;margin:0;font-size:13px;">Initializing executive register & reviews...</p>
+      </div>
+    </div>
+  </div>
+  <script type="text/babel" data-type="module">
+import React, { useEffect, useMemo, useState } from 'react';
+import { createRoot } from 'react-dom/client';
+import {
+  Activity, CalendarDays, CheckCircle2, ChevronDown, CircleAlert, ClipboardList,
+  FileSpreadsheet, LayoutDashboard, LogOut, Menu, NotebookPen, Plus, Search,
+  Settings, Users, X, Bell, ArrowUpRight, Clock3, Building2, Trash2, Edit3,
+  RotateCcw, Calendar, Check, AlertTriangle, ArrowRight, Eye, ChevronLeft, ChevronRight
+} from 'lucide-react';
+
+const API = '/api';
+const statusClass = (s) => (s || '').toLowerCase().replaceAll(' ', '-');
+const formatTodayStr = () => new Date().toISOString().slice(0, 10);
+
+function App() {
+  const [token, setToken] = useState(localStorage.getItem('cmas_token') || '');
+  const [user, setUser] = useState(null);
+  const [login, setLogin] = useState({ username: 'ceo', password: '' });
+  const [page, setPage] = useState('dashboard');
+
+  const [tasks, setTasks] = useState([]);
+  const [meetings, setMeetings] = useState([]);
+  const [daily, setDaily] = useState([]);
+  const [departments, setDepartments] = useState([]);
+  const [dashboard, setDashboard] = useState({});
+  const [reviews, setReviews] = useState([]);
+
+  // Daily CEO Register state
+  const [dailyDate, setDailyDate] = useState(formatTodayStr());
+  const [dailyRegister, setDailyRegister] = useState({ meetings: [], daily_entries: [], total_meetings: 0, total_tasks_today: 0, is_today: true });
+
+  // Filter states
+  const [reviewFilter, setReviewFilter] = useState('due_today');
+  const [meetingFilter, setMeetingFilter] = useState('all');
+  const [query, setQuery] = useState('');
+  const [filterDept, setFilterDept] = useState('All Departments');
+  const [filterStatus, setFilterStatus] = useState('All Status');
+
+  // Modals & form state
+  const [modal, setModal] = useState('');
+  const [editId, setEditId] = useState(null);
+  const [deleteTarget, setDeleteTarget] = useState(null);
+  const [activeReview, setActiveReview] = useState(null);
+
+  const [taskForm, setTaskForm] = useState({
+    title: '', meeting_id: '', department_id: '', discussion: '', action_required: '',
+    assigned_to: '', accountable: '', priority: 'Medium', status: 'Not Started',
+    progress: 0, deadline: '', review_date: '', remarks: ''
+  });
+
+  const [meetingForm, setMeetingForm] = useState({
+    meeting_date: formatTodayStr(), start_time: '', end_time: '', meeting_with: '',
+    department_id: '', meeting_type: 'Review', location: '', discussion: '',
+    decisions: '', next_review_date: '', recorded_by: ''
+  });
+
+  const [dailyForm, setDailyForm] = useState({
+    entry_date: formatTodayStr(), entry_time: '', activity_type: 'Discussion',
+    person_met: '', department_id: '', discussion: '', decision: '',
+    follow_up_required: 'No', review_date: '', recorded_by: ''
+  });
+
+  const [reviewForm, setReviewForm] = useState({
+    progress: 0, status: 'In Progress', next_review_date: '', review_notes: '', remarks: ''
+  });
+
+  const [error, setError] = useState('');
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+
+  // Authenticated HTTP request helper
+  const req = async (path, opts = {}) => {
+    const r = await fetch(`${API}${path}`, {
+      ...opts,
+      headers: {
+        ...(opts.headers || {}),
+        ...(token ? { Authorization: `Bearer ${token}` } : {})
+      }
+    });
+    if (!r.ok) {
+      const msg = await r.text();
+      throw new Error(msg || `Request failed ${r.status}`);
+    }
+    return r.status === 204 ? null : r.json();
+  };
+
+  const refresh = async () => {
+    if (!token) return;
+    try {
+      const [t, m, d, dep, dash, dr, rev] = await Promise.all([
+        req('/tasks'),
+        req(`/meetings?filter_type=${meetingFilter}`),
+        req('/daily'),
+        req('/departments'),
+        req('/dashboard'),
+        req(`/daily-register?date_str=${dailyDate}`),
+        req(`/reviews?filter_type=${reviewFilter}`)
+      ]);
+      setTasks(t);
+      setMeetings(m);
+      setDaily(d);
+      setDepartments(dep);
+      setDashboard(dash);
+      setDailyRegister(dr);
+      setReviews(rev);
+    } catch (e) {
+      setError(e.message);
+    }
+  };
+
+  useEffect(() => {
+    if (token) {
+      localStorage.setItem('cmas_token', token);
+      req('/auth/me')
+        .then(setUser)
+        .catch(() => {
+          setToken('');
+          localStorage.removeItem('cmas_token');
+        });
+    }
+  }, [token]);
+
+  useEffect(() => {
+    if (user) refresh();
+  }, [user, dailyDate, reviewFilter, meetingFilter]);
+
+  const signIn = async (e) => {
+    e.preventDefault();
+    setError('');
+    try {
+      const form = new URLSearchParams();
+      form.set('username', login.username);
+      form.set('password', login.password);
+      const r = await fetch(`${API}/auth/login`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: form
+      });
+      if (!r.ok) throw new Error('Invalid username or password');
+      const data = await r.json();
+      setToken(data.access_token);
+      setUser(data.user);
+    } catch (err) {
+      setError(err.message);
+    }
+  };
+
+  const logout = () => {
+    setToken('');
+    setUser(null);
+    localStorage.removeItem('cmas_token');
+  };
+
+  // Date shifting for Daily CEO Register
+  const shiftDailyDate = (days) => {
+    const d = new Date(dailyDate);
+    d.setDate(d.getDate() + days);
+    setDailyDate(d.toISOString().slice(0, 10));
+  };
+
+  const jumpToToday = () => {
+    setDailyDate(formatTodayStr());
+  };
+
+  // Handlers for Save / Edit / Delete
+  const saveMeeting = async (e) => {
+    e.preventDefault();
+    try {
+      const payload = {
+        ...meetingForm,
+        department_id: meetingForm.department_id ? Number(meetingForm.department_id) : null,
+        next_review_date: meetingForm.next_review_date || null
+      };
+      await req(editId ? `/meetings/${editId}` : '/meetings', {
+        method: editId ? 'PUT' : 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+      setModal('');
+      setEditId(null);
+      refresh();
+    } catch (e) {
+      setError(e.message);
+    }
+  };
+
+  const openEditMeeting = (m) => {
+    setEditId(m.id);
+    setMeetingForm({
+      meeting_date: m.meeting_date,
+      start_time: m.start_time || '',
+      end_time: m.end_time || '',
+      meeting_with: m.meeting_with || '',
+      department_id: m.department_id || '',
+      meeting_type: m.meeting_type || 'Review',
+      location: m.location || '',
+      discussion: m.discussion || '',
+      decisions: m.decisions || '',
+      next_review_date: m.next_review_date || '',
+      recorded_by: m.recorded_by || user?.full_name || ''
+    });
+    setModal('meeting');
+  };
+
+  const openNewMeetingForDate = (dateVal) => {
+    setEditId(null);
+    setMeetingForm({
+      meeting_date: dateVal || dailyDate || formatTodayStr(),
+      start_time: '',
+      end_time: '',
+      meeting_with: '',
+      department_id: '',
+      meeting_type: 'Review',
+      location: '',
+      discussion: '',
+      decisions: '',
+      next_review_date: '',
+      recorded_by: user?.full_name || ''
+    });
+    setModal('meeting');
+  };
+
+  const confirmDelete = async () => {
+    if (!deleteTarget) return;
+    try {
+      if (deleteTarget.type === 'meeting') {
+        await req(`/meetings/${deleteTarget.id}`, { method: 'DELETE' });
+      } else if (deleteTarget.type === 'task') {
+        await req(`/tasks/${deleteTarget.id}`, { method: 'DELETE' });
+      } else if (deleteTarget.type === 'daily') {
+        await req(`/daily/${deleteTarget.id}`, { method: 'DELETE' });
+      }
+      setDeleteTarget(null);
+      refresh();
+    } catch (e) {
+      setError(e.message);
+    }
+  };
+
+  const saveQuickReview = async (e) => {
+    e.preventDefault();
+    if (!activeReview) return;
+    try {
+      const payload = {
+        progress: Number(reviewForm.progress),
+        status: reviewForm.status,
+        next_review_date: reviewForm.next_review_date || null,
+        review_notes: reviewForm.review_notes || '',
+        remarks: reviewForm.remarks || ''
+      };
+      await req(`/tasks/${activeReview.task_id}/quick-review`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+      setModal('');
+      setActiveReview(null);
+      refresh();
+    } catch (e) {
+      setError(e.message);
+    }
+  };
+
+  const openQuickReviewModal = (item) => {
+    setActiveReview(item);
+    setReviewForm({
+      progress: item.progress || 0,
+      status: item.status || 'In Progress',
+      next_review_date: '',
+      review_notes: '',
+      remarks: item.remarks || ''
+    });
+    setModal('quick_review');
+  };
+
+  const saveTask = async (e) => {
+    e.preventDefault();
+    try {
+      const payload = {
+        ...taskForm,
+        meeting_id: taskForm.meeting_id ? Number(taskForm.meeting_id) : null,
+        department_id: taskForm.department_id ? Number(taskForm.department_id) : null,
+        progress: Number(taskForm.progress),
+        deadline: taskForm.deadline || null,
+        review_date: taskForm.review_date || null
+      };
+      await req(editId ? `/tasks/${editId}` : '/tasks', {
+        method: editId ? 'PUT' : 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+      setModal('');
+      setEditId(null);
+      refresh();
+    } catch (e) {
+      setError(e.message);
+    }
+  };
+
+  const openNewTask = (meetingId, deptId) => {
+    setEditId(null);
+    setTaskForm({
+      title: '',
+      meeting_id: meetingId || '',
+      department_id: deptId || '',
+      discussion: '',
+      action_required: '',
+      assigned_to: '',
+      accountable: '',
+      priority: 'Medium',
+      status: 'Not Started',
+      progress: 0,
+      deadline: '',
+      review_date: formatTodayStr(),
+      remarks: ''
+    });
+    setModal('task');
+  };
+
+  const editTask = (t) => {
+    setEditId(t.id);
+    setTaskForm({
+      ...t,
+      meeting_id: t.meeting_id || '',
+      department_id: t.department_id || '',
+      deadline: t.deadline || '',
+      review_date: t.review_date || ''
+    });
+    setModal('task');
+  };
+
+  const saveDaily = async (e) => {
+    e.preventDefault();
+    try {
+      const payload = {
+        ...dailyForm,
+        department_id: dailyForm.department_id ? Number(dailyForm.department_id) : null,
+        review_date: dailyForm.review_date || null
+      };
+      await req(editId ? `/daily/${editId}` : '/daily', {
+        method: editId ? 'PUT' : 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+      setModal('');
+      setEditId(null);
+      refresh();
+    } catch (e) {
+      setError(e.message);
+    }
+  };
+
+  const openNewDaily = () => {
+    setEditId(null);
+    setDailyForm({
+      entry_date: dailyDate || formatTodayStr(),
+      entry_time: '',
+      activity_type: 'Discussion',
+      person_met: '',
+      department_id: '',
+      discussion: '',
+      decision: '',
+      follow_up_required: 'No',
+      review_date: '',
+      recorded_by: user?.full_name || ''
+    });
+    setModal('daily');
+  };
+
+  const editDaily = (d) => {
+    setEditId(d.id);
+    setDailyForm({
+      ...d,
+      department_id: d.department_id || '',
+      review_date: d.review_date || ''
+    });
+    setModal('daily');
+  };
+
+  const download = (kind, type = 'tasks') => {
+    fetch(`${API}/reports/${type}.${kind}`, {
+      headers: { Authorization: `Bearer ${token}` }
+    })
+      .then(async (r) => {
+        if (!r.ok) throw new Error('Export failed');
+        const blob = await r.blob();
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `cmas_${type}_tracker.${kind}`;
+        a.click();
+        URL.revokeObjectURL(url);
+      })
+      .catch((e) => setError(e.message));
+  };
+
+  // Filtered views
+  const filteredTasks = useMemo(() => {
+    return tasks.filter((t) => {
+      const q = query.toLowerCase();
+      const matches = [t.title, t.assigned_to, t.department?.name, t.action_required].join(' ').toLowerCase().includes(q);
+      const matchesStatus = filterStatus === 'All Status' || t.status === filterStatus;
+      const matchesDept = filterDept === 'All Departments' || t.department?.name === filterDept;
+      return matches && matchesStatus && matchesDept;
+    });
+  }, [tasks, query, filterStatus, filterDept]);
+
+  const filteredReviews = useMemo(() => {
+    return reviews.filter((r) => {
+      const q = query.toLowerCase();
+      const matches = [r.title, r.assigned_to, r.department_name, r.action_required, r.meeting_with, r.meeting_discussion].join(' ').toLowerCase().includes(q);
+      const matchesDept = filterDept === 'All Departments' || r.department_name === filterDept;
+      return matches && matchesDept;
+    });
+  }, [reviews, query, filterDept]);
+
+  const filteredMeetings = useMemo(() => {
+    return meetings.filter((m) => {
+      const q = query.toLowerCase();
+      const matches = [m.meeting_with, m.department?.name, m.discussion, m.decisions, m.meeting_type].join(' ').toLowerCase().includes(q);
+      const matchesDept = filterDept === 'All Departments' || m.department?.name === filterDept;
+      return matches && matchesDept;
+    });
+  }, [meetings, query, filterDept]);
+
+  if (!token || !user) {
+    return (
+      <div className="login-shell">
+        <div className="login-art">
+          <div className="login-brand">
+            <div className="brand-mark">CM</div>
+            <span>CMAS</span>
+          </div>
+          <div className="login-message">
+            <p className="eyebrow">EXECUTIVE OPERATIONS</p>
+            <h1>Decisions should move.<br />Actions should matter.</h1>
+            <p>Unified executive system for daily meetings, automated follow-up reviews, and action tracking.</p>
+            <div className="login-stat">
+              <span><b>Daily Register</b><small>Today's meetings only</small></span>
+              <span><b>Previous Reviews</b><small>Automated follow-up</small></span>
+              <span><b>Accountability</b><small>Direct responsibility</small></span>
+            </div>
+          </div>
+        </div>
+        <form className="login-card" onSubmit={signIn}>
+          <div className="brand-mark small">CM</div>
+          <h2>Welcome back</h2>
+          <p>Sign in to the Daily CEO Management System</p>
+          <label>
+            Username
+            <input
+              value={login.username}
+              onChange={(e) => setLogin({ ...login, username: e.target.value })}
+              placeholder="Username"
+              autoComplete="username"
+            />
+          </label>
+          <label>
+            Password
+            <input
+              type="password"
+              value={login.password}
+              onChange={(e) => setLogin({ ...login, password: e.target.value })}
+              placeholder="Enter password"
+              autoComplete="current-password"
+            />
+          </label>
+          {error && <div className="error">{error}</div>}
+          <button className="primary full">Sign in <ArrowUpRight size={16} /></button>
+          <div className="login-hint">Demo Login: ceo / CmasCEO@123</div>
+        </form>
+      </div>
+    );
+  }
+
+  const nav = [
+    { key: 'dashboard', name: 'Dashboard', icon: LayoutDashboard },
+    { key: 'daily', name: 'Daily CEO Register', icon: NotebookPen, badge: dashboard?.today_meetings_count },
+    { key: 'reviews', name: 'Previous Meeting Review', icon: Clock3, badge: dashboard?.reviews_due_today_count, alert: dashboard?.reviews_overdue_count > 0 },
+    { key: 'meetings', name: 'Meetings (All & Done)', icon: CalendarDays },
+    { key: 'tasks', name: 'Action Tracker', icon: ClipboardList },
+    { key: 'departments', name: 'Departments', icon: Building2 },
+    { key: 'reports', name: 'Reports & Exports', icon: FileSpreadsheet }
+  ];
+
+  return (
+    <div className="app-shell">
+      {/* Sidebar */}
+      <aside className={`sidebar ${sidebarOpen ? 'open' : ''}`}>
+        <div className="brand-row">
+          <div className="brand-mark">CM</div>
+          <div>
+            <b>CMAS</b>
+            <small>Daily CEO System</small>
+          </div>
+          <button className="icon-btn mobile-close" onClick={() => setSidebarOpen(false)}>
+            <X size={18} />
+          </button>
+        </div>
+        <div className="nav-label">WORKSPACE</div>
+        <nav>
+          {nav.map((n) => (
+            <button
+              key={n.key}
+              className={`nav-item ${page === n.key ? 'active' : ''}`}
+              onClick={() => {
+                setPage(n.key);
+                setSidebarOpen(false);
+              }}
+            >
+              <n.icon size={18} />
+              <span>{n.name}</span>
+              {n.badge !== undefined && n.badge > 0 && (
+                <span className={`nav-badge ${n.alert ? 'alert' : ''}`}>{n.badge}</span>
+              )}
+              {page === n.key && !n.badge && <span className="nav-dot" />}
+            </button>
+          ))}
+        </nav>
+        <div className="sidebar-bottom">
+          <div className="system-status">
+            <span className="status-light" />
+            Executive System Online
+            <small>SQLite Database Active</small>
+          </div>
+          <div className="user-profile">
+            <div className="avatar">{user.full_name?.slice(0, 1) || 'U'}</div>
+            <div className="user-meta">
+              <b>{user.full_name}</b>
+              <small>{user.role}</small>
+            </div>
+            <button className="icon-btn" onClick={logout} title="Sign out">
+              <LogOut size={17} />
+            </button>
+          </div>
+        </div>
+      </aside>
+
+      {/* Main Content Area */}
+      <main className="main">
+        <header className="topbar">
+          <button className="icon-btn mobile-menu" onClick={() => setSidebarOpen(true)}>
+            <Menu size={20} />
+          </button>
+          <div className="breadcrumb">
+            <span>Workspace</span>
+            <b>/</b>
+            <strong>{nav.find((n) => n.key === page)?.name || page}</strong>
+          </div>
+          <div className="top-actions">
+            <span className="today-label">
+              {new Date().toLocaleDateString(undefined, { weekday: 'short', day: 'numeric', month: 'short', year: 'numeric' })}
+            </span>
+            {dashboard?.reviews_due_today_count > 0 && (
+              <button
+                className="secondary btn-sm"
+                onClick={() => {
+                  setPage('reviews');
+                  setReviewFilter('due_today');
+                }}
+              >
+                <Clock3 size={14} color="#e0a54f" />
+                <span>{dashboard.reviews_due_today_count} Reviews Due Today</span>
+              </button>
+            )}
+            <div className="avatar top-avatar">{user.full_name?.slice(0, 1) || 'U'}</div>
+          </div>
+        </header>
+
+        <div className="content">
+          {error && (
+            <div className="error-banner">
+              <span>{error}</span>
+              <button onClick={() => setError('')}><X size={16} /></button>
+            </div>
+          )}
+
+          {/* PAGE 1: DASHBOARD */}
+          {page === 'dashboard' && (
+            <>
+              <div className="page-heading">
+                <div>
+                  <p className="eyebrow">EXECUTIVE OVERVIEW</p>
+                  <h1>Good day, {user.full_name}.</h1>
+                  <p className="subheading">Here is your daily executive summary and review schedule.</p>
+                </div>
+                <div className="page-heading-actions">
+                  <button className="primary" onClick={() => openNewMeetingForDate(formatTodayStr())}>
+                    <Plus size={16} /> Record Today's Meeting
+                  </button>
+                </div>
+              </div>
+
+              {/* Key Executive Metrics */}
+              <div className="metric-grid">
+                <Metric
+                  label="Today's Meetings"
+                  value={dashboard?.today_meetings_count || 0}
+                  icon={<CalendarDays />}
+                  accent="blue"
+                  note="Scheduled / held today"
+                />
+                <Metric
+                  label="Reviews Due Today"
+                  value={dashboard?.reviews_due_today_count || 0}
+                  icon={<Clock3 />}
+                  accent="amber"
+                  note="Assigned in earlier meetings"
+                />
+                <Metric
+                  label="Overdue Reviews"
+                  value={dashboard?.reviews_overdue_count || 0}
+                  icon={<CircleAlert />}
+                  accent="red"
+                  note="Past review date"
+                />
+                <Metric
+                  label="Completed Actions"
+                  value={dashboard?.completed || 0}
+                  icon={<CheckCircle2 />}
+                  accent="green"
+                  note={`${dashboard?.total_tasks ? Math.round((dashboard.completed / dashboard.total_tasks) * 100) : 0}% completion`}
+                />
+              </div>
+
+              {/* Quick Actions & Reviews Callout */}
+              <div className="dashboard-grid">
+                <section className="panel">
+                  <div className="panel-head">
+                    <div>
+                      <h2><Clock3 size={18} color="#bd8834" /> Today's Scheduled Reviews</h2>
+                      <p>Tasks from previous meetings that require CEO follow-up today</p>
+                    </div>
+                    <button
+                      className="text-btn"
+                      onClick={() => {
+                        setPage('reviews');
+                        setReviewFilter('due_today');
+                      }}
+                    >
+                      Open Review Section <ArrowUpRight size={15} />
+                    </button>
+                  </div>
+                  {dashboard?.reviews_due_today && dashboard.reviews_due_today.length > 0 ? (
+                    <div className="meeting-card-list">
+                      {dashboard.reviews_due_today.map((t) => (
+                        <div key={t.id} className="meeting-task-item">
+                          <div>
+                            <b>{t.title}</b>
+                            <small className="cell-sub">
+                              Assigned to: {t.assigned_to || 'Unassigned'} · Dept: {t.department?.name || 'General'}
+                            </small>
+                          </div>
+                          <span className={`priority ${t.priority.toLowerCase()}`}>{t.priority}</span>
+                        </div>
+                      ))}
+                    </div>
+                  ) : (
+                    <p style={{ fontSize: '12px', color: '#718096', padding: '10px 0' }}>
+                      No reviews currently due today. All past meetings are up to date.
+                    </p>
+                  )}
+                </section>
+
+                <section className="panel">
+                  <div className="panel-head">
+                    <div>
+                      <h2>Quick Executive Actions</h2>
+                      <p>Record, review, or assign responsibilities</p>
+                    </div>
+                  </div>
+                  <div className="quick-actions">
+                    <button onClick={() => { setPage('daily'); jumpToToday(); }}>
+                      <div className="quick-icon blue-bg"><NotebookPen /></div>
+                      <span>
+                        <b>Daily CEO Register</b>
+                        <small>Manage today's meetings only</small>
+                      </span>
+                      <ArrowUpRight />
+                    </button>
+                    <button onClick={() => { setPage('reviews'); setReviewFilter('due_today'); }}>
+                      <div className="quick-icon purple-bg"><Clock3 /></div>
+                      <span>
+                        <b>Previous Meeting Review</b>
+                        <small>Automatic follow-ups for today</small>
+                      </span>
+                      <ArrowUpRight />
+                    </button>
+                    <button onClick={() => openNewTask()}>
+                      <div className="quick-icon green-bg"><ClipboardList /></div>
+                      <span>
+                        <b>Assign New Task</b>
+                        <small>Set owner, deadline & review date</small>
+                      </span>
+                      <ArrowUpRight />
+                    </button>
+                  </div>
+                </section>
+              </div>
+
+              {/* Today's Meetings Overview */}
+              <section className="panel table-panel">
+                <div className="panel-head">
+                  <div>
+                    <h2><CalendarDays size={18} /> Today's Meetings Overview</h2>
+                    <p>Meetings scheduled or recorded for today ({dashboard?.today_date_display})</p>
+                  </div>
+                  <button className="text-btn" onClick={() => setPage('daily')}>
+                    View in Daily Register <ArrowUpRight size={15} />
+                  </button>
+                </div>
+                {dashboard?.today_meetings && dashboard.today_meetings.length > 0 ? (
+                  <MeetingTable meetings={dashboard.today_meetings} onEdit={openEditMeeting} onDelete={(m) => setDeleteTarget({ type: 'meeting', id: m.id, name: m.meeting_with })} />
+                ) : (
+                  <div className="empty">No meetings recorded for today yet. Use 'Record Today's Meeting' to add one.</div>
+                )}
+              </section>
+            </>
+          )}
+
+          {/* PAGE 2: DAILY CEO REGISTER */}
+          {page === 'daily' && (
+            <>
+              <div className="page-heading">
+                <div>
+                  <p className="eyebrow">DAILY CEO REGISTER</p>
+                  <h1>Executive Meeting Management</h1>
+                  <p className="subheading">
+                    Focused view of meetings scheduled or recorded for the day. Does not mix with historical records.
+                  </p>
+                </div>
+                <div className="page-heading-actions">
+                  <button className="primary" onClick={() => openNewMeetingForDate(dailyDate)}>
+                    <Plus size={16} /> Record Meeting for This Date
+                  </button>
+                  <button className="secondary" onClick={openNewDaily}>
+                    <Plus size={16} /> Quick Daily Note
+                  </button>
+                </div>
+              </div>
+
+              {/* Date Navigation Bar */}
+              <div className="date-nav-bar">
+                <div className="date-nav-controls">
+                  <button className="date-nav-btn" onClick={() => shiftDailyDate(-1)} title="Previous Day">
+                    <ChevronLeft size={16} /> Previous Day
+                  </button>
+                  <button
+                    className={`date-nav-btn ${dailyRegister.is_today ? 'today-btn' : ''}`}
+                    onClick={jumpToToday}
+                  >
+                    <Calendar size={15} /> Today
+                  </button>
+                  <button className="date-nav-btn" onClick={() => shiftDailyDate(1)} title="Next Day">
+                    Next Day <ChevronRight size={16} />
+                  </button>
+                </div>
+
+                <div className="date-indicator">
+                  <h2>{dailyRegister.date_display || dailyDate}</h2>
+                  {dailyRegister.is_today ? (
+                    <span className="date-badge today">● Today's Active Register</span>
+                  ) : (
+                    <span className="date-badge history">Historical / Scheduled Register</span>
+                  )}
+                </div>
+
+                <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                  <span style={{ fontSize: '11px', color: '#718096' }}>Jump to:</span>
+                  <input
+                    type="date"
+                    className="date-picker-input"
+                    value={dailyDate}
+                    onChange={(e) => setDailyDate(e.target.value)}
+                  />
+                </div>
+              </div>
+
+              {/* Daily Register Summary Metrics */}
+              <div className="metric-grid" style={{ marginBottom: '16px' }}>
+                <Metric
+                  label="Meetings Today"
+                  value={dailyRegister.total_meetings || 0}
+                  icon={<CalendarDays />}
+                  accent="blue"
+                  note={`Recorded for ${dailyRegister.date_display || dailyDate}`}
+                />
+                <Metric
+                  label="Actions Generated"
+                  value={dailyRegister.total_tasks_today || 0}
+                  icon={<ClipboardList />}
+                  accent="amber"
+                  note="Tied to today's meetings"
+                />
+                <Metric
+                  label="Executive Notes"
+                  value={dailyRegister.daily_entries?.length || 0}
+                  icon={<NotebookPen />}
+                  accent="green"
+                  note="Observations & briefings"
+                />
+                <Metric
+                  label="Reviews Scheduled Today"
+                  value={dashboard?.reviews_due_today_count || 0}
+                  icon={<Clock3 />}
+                  accent="red"
+                  note="Follow-ups due in Review section"
+                />
+              </div>
+
+              {/* Today's Meetings List with Rich Cards */}
+              <section className="panel">
+                <div className="panel-head">
+                  <div>
+                    <h2>
+                      <CalendarDays size={18} /> Meetings for {dailyRegister.date_display || dailyDate}
+                    </h2>
+                    <p>Meetings scheduled or conducted on this specific date</p>
+                  </div>
+                  <button className="primary btn-sm" onClick={() => openNewMeetingForDate(dailyDate)}>
+                    <Plus size={14} /> Add Meeting
+                  </button>
+                </div>
+
+                {dailyRegister.meetings && dailyRegister.meetings.length > 0 ? (
+                  <div className="meeting-card-list">
+                    {dailyRegister.meetings.map((m) => (
+                      <div key={m.id} className="meeting-card">
+                        <div className="meeting-card-head">
+                          <div className="meeting-card-title">
+                            <h3>{m.meeting_with}</h3>
+                            <div className="meeting-card-tags">
+                              {m.start_time && (
+                                <span className="tag-pill time">
+                                  {m.start_time} {m.end_time ? `– ${m.end_time}` : ''}
+                                </span>
+                              )}
+                              <span className="tag-pill dept">{m.department?.name || 'General Management'}</span>
+                              <span className="tag-pill type">{m.meeting_type}</span>
+                              {m.location && <span className="tag-pill loc">{m.location}</span>}
+                              {m.recorded_by && <span className="tag-pill">Recorded by: {m.recorded_by}</span>}
+                            </div>
+                          </div>
+
+                          <div className="meeting-card-actions">
+                            <button
+                              className="secondary btn-sm"
+                              onClick={() => openNewTask(m.id, m.department_id || undefined)}
+                              title="Assign Task from this Meeting"
+                            >
+                              <Plus size={13} /> Add Task
+                            </button>
+                            <button
+                              className="secondary btn-sm"
+                              onClick={() => openEditMeeting(m)}
+                              title="Edit Meeting Details"
+                            >
+                              <Edit3 size={13} /> Edit
+                            </button>
+                            <button
+                              className="danger-btn btn-sm"
+                              onClick={() => setDeleteTarget({ type: 'meeting', id: m.id, name: m.meeting_with })}
+                              title="Delete Meeting Record"
+                            >
+                              <Trash2 size={13} /> Delete
+                            </button>
+                          </div>
+                        </div>
+
+                        {/* Meeting Discussion & Decisions */}
+                        <div className="meeting-card-body">
+                          {m.discussion && (
+                            <div className="meeting-detail-row">
+                              <b>Discussion Points</b>
+                              <p>{m.discussion}</p>
+                            </div>
+                          )}
+                          {m.decisions && (
+                            <div className="meeting-detail-row">
+                              <b>Decisions Taken</b>
+                              <p>{m.decisions}</p>
+                            </div>
+                          )}
+                        </div>
+
+                        {/* Associated Tasks */}
+                        {m.tasks && m.tasks.length > 0 && (
+                          <div className="meeting-tasks-box">
+                            <h4>
+                              <span>Assigned Action Items ({m.tasks.length})</span>
+                              <small style={{ textTransform: 'none', color: '#a0aec0' }}>Click task to edit</small>
+                            </h4>
+                            {m.tasks.map((t) => (
+                              <div
+                                key={t.id}
+                                className="meeting-task-item"
+                                onClick={() => editTask(t)}
+                                style={{ cursor: 'pointer' }}
+                              >
+                                <div style={{ flex: 1 }}>
+                                  <b style={{ color: '#2d3748' }}>{t.title}</b>
+                                  <div style={{ fontSize: '10px', color: '#718096', marginTop: '2px' }}>
+                                    Owner: <strong>{t.assigned_to || 'Unassigned'}</strong> · Deadline:{' '}
+                                    {t.deadline || 'None'} · Review Date: <strong>{t.review_date || 'None'}</strong>
+                                  </div>
+                                </div>
+                                <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
+                                  <span className={`priority ${t.priority.toLowerCase()}`}>{t.priority}</span>
+                                  <span className={`status ${statusClass(t.status)}`}>{t.status}</span>
+                                  <div className="mini-progress">
+                                    <div><span style={{ width: `${t.progress || 0}%` }} /></div>
+                                    <small>{t.progress || 0}%</small>
+                                  </div>
+                                </div>
+                              </div>
+                            ))}
+                          </div>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <div className="empty">
+                    <p style={{ margin: '0 0 10px', fontWeight: 600 }}>No meetings recorded for {dailyRegister.date_display || dailyDate}.</p>
+                    <p style={{ margin: 0, fontSize: '11px' }}>
+                      Click <strong>"Record Meeting for This Date"</strong> above to capture discussions, decisions and assign actions.
+                    </p>
+                  </div>
+                )}
+              </section>
+
+              {/* Daily Executive Notes Section */}
+              <section className="panel table-panel">
+                <div className="panel-head">
+                  <div>
+                    <h2><NotebookPen size={18} /> Executive Observations & Daily Entries</h2>
+                    <p>Informal briefings, calls, and follow-ups on {dailyRegister.date_display || dailyDate}</p>
+                  </div>
+                  <button className="secondary btn-sm" onClick={openNewDaily}>
+                    <Plus size={14} /> Add Entry
+                  </button>
+                </div>
+                {dailyRegister.daily_entries && dailyRegister.daily_entries.length > 0 ? (
+                  <DailyTable daily={dailyRegister.daily_entries} onEdit={editDaily} onDelete={(d) => setDeleteTarget({ type: 'daily', id: d.id, name: d.person_met })} />
+                ) : (
+                  <div className="empty">No executive journal entries recorded for this date.</div>
+                )}
+              </section>
+            </>
+          )}
+
+          {/* PAGE 3: PREVIOUS MEETING REVIEW */}
+          {page === 'reviews' && (
+            <>
+              <div className="page-heading">
+                <div>
+                  <p className="eyebrow">ACCOUNTABILITY & FOLLOW-UP</p>
+                  <h1>Previous Meeting Review</h1>
+                  <p className="subheading">
+                    Tasks originating from earlier meetings that have reached their scheduled review date.
+                  </p>
+                </div>
+                <div className="page-heading-actions">
+                  <button className="secondary" onClick={() => download('csv', 'reviews')}>
+                    <FileSpreadsheet size={16} /> Export Reviews CSV
+                  </button>
+                </div>
+              </div>
+
+              {/* Review Filter Tabs */}
+              <div className="review-tab-bar">
+                <button
+                  className={`review-tab ${reviewFilter === 'due_today' ? 'active' : ''}`}
+                  onClick={() => setReviewFilter('due_today')}
+                >
+                  <Clock3 size={15} />
+                  <span>Due Today</span>
+                  {dashboard?.reviews_due_today_count > 0 && (
+                    <span className="tab-badge">{dashboard.reviews_due_today_count}</span>
+                  )}
+                </button>
+
+                <button
+                  className={`review-tab ${reviewFilter === 'overdue' ? 'active' : ''}`}
+                  onClick={() => setReviewFilter('overdue')}
+                >
+                  <CircleAlert size={15} />
+                  <span>Overdue Reviews</span>
+                  {dashboard?.reviews_overdue_count > 0 && (
+                    <span className="tab-badge danger">{dashboard.reviews_overdue_count}</span>
+                  )}
+                </button>
+
+                <button
+                  className={`review-tab ${reviewFilter === 'upcoming' ? 'active' : ''}`}
+                  onClick={() => setReviewFilter('upcoming')}
+                >
+                  <Calendar size={15} />
+                  <span>Upcoming Reviews</span>
+                </button>
+
+                <button
+                  className={`review-tab ${reviewFilter === 'all' ? 'active' : ''}`}
+                  onClick={() => setReviewFilter('all')}
+                >
+                  <ClipboardList size={15} />
+                  <span>All Pending Reviews</span>
+                </button>
+
+                <button
+                  className={`review-tab ${reviewFilter === 'completed' ? 'active' : ''}`}
+                  onClick={() => setReviewFilter('completed')}
+                >
+                  <CheckCircle2 size={15} />
+                  <span>Completed Reviews</span>
+                </button>
+              </div>
+
+              {/* Search & Department Toolbar */}
+              <div className="toolbar">
+                <div className="searchbox">
+                  <Search size={16} />
+                  <input
+                    placeholder="Search by task title, responsible owner, or meeting context..."
+                    value={query}
+                    onChange={(e) => setQuery(e.target.value)}
+                  />
+                </div>
+                <select value={filterDept} onChange={(e) => setFilterDept(e.target.value)}>
+                  <option>All Departments</option>
+                  {departments.map((d) => (
+                    <option key={d.id} value={d.name}>{d.name}</option>
+                  ))}
+                </select>
+              </div>
+
+              {/* Review Cards List */}
+              {filteredReviews.length > 0 ? (
+                <div className="review-card-list">
+                  {filteredReviews.map((item) => (
+                    <div key={item.id} className="review-card">
+                      {/* Top Bar with Status and Priority */}
+                      <div className="review-card-top">
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap' }}>
+                          <span className={`status ${statusClass(item.status)}`}>{item.status}</span>
+                          <span className={`priority ${item.priority.toLowerCase()}`}>{item.priority}</span>
+                          <span className="tag-pill dept">{item.department_name}</span>
+                          {item.is_due_today && (
+                            <span className="tag-pill time" style={{ background: '#e6fffa', color: '#234e52', fontWeight: 700 }}>
+                              ● Due for Review Today
+                            </span>
+                          )}
+                          {item.is_overdue && (
+                            <span className="tag-pill" style={{ background: '#fff5f5', color: '#c53030', fontWeight: 700 }}>
+                              ▲ Overdue by {item.days_overdue} days
+                            </span>
+                          )}
+                        </div>
+
+                        <div className="mini-progress" style={{ minWidth: '130px' }}>
+                          <div><span style={{ width: `${item.progress}%` }} /></div>
+                          <small style={{ fontWeight: 700, color: '#2d3748' }}>{item.progress}% done</small>
+                        </div>
+                      </div>
+
+                      {/* Originating Meeting Context Callout */}
+                      <div className="review-origin-box">
+                        <div>
+                          <span>Originating Meeting: </span>
+                          <strong>{item.meeting_with}</strong>
+                          <span style={{ margin: '0 6px', color: '#cbd5e0' }}>|</span>
+                          <span>Held on: <strong>{item.meeting_date_display}</strong></span>
+                          {item.days_since_meeting !== null && (
+                            <span style={{ color: '#718096' }}> ({item.days_since_meeting} days ago)</span>
+                          )}
+                        </div>
+                        {item.meeting_type && <span className="tag-pill">{item.meeting_type}</span>}
+                      </div>
+
+                      {/* Assigned Task Title & Action Required */}
+                      <div style={{ marginBottom: '12px' }}>
+                        <h3 style={{ margin: '0 0 6px', fontSize: '15px', color: '#1a202c', fontFamily: 'Manrope', fontWeight: 800 }}>
+                          {item.title}
+                        </h3>
+                        {item.action_required && (
+                          <p style={{ margin: 0, fontSize: '12px', color: '#4a5568', lineHeight: 1.5 }}>
+                            <strong>Action Required:</strong> {item.action_required}
+                          </p>
+                        )}
+                      </div>
+
+                      {/* Why Review is Required */}
+                      <div className={`review-reason-box ${item.is_due_today ? 'today' : item.is_overdue ? 'overdue' : ''}`}>
+                        <AlertTriangle size={15} style={{ flexShrink: 0 }} />
+                        <span><strong>Review Context:</strong> {item.review_reason}</span>
+                      </div>
+
+                      {/* Metadata Grid */}
+                      <div className="review-meta-grid">
+                        <div className="review-meta-item">
+                          <small>Assigned To</small>
+                          <b>{item.assigned_to || 'Unassigned'}</b>
+                        </div>
+                        <div className="review-meta-item">
+                          <small>Accountable Head</small>
+                          <b>{item.accountable || 'Unassigned'}</b>
+                        </div>
+                        <div className="review-meta-item">
+                          <small>Final Deadline</small>
+                          <b>{item.deadline || 'No deadline'}</b>
+                        </div>
+                        <div className="review-meta-item">
+                          <small>Scheduled Review</small>
+                          <b style={{ color: item.is_due_today ? '#2b6cb0' : item.is_overdue ? '#c53030' : '#2d3748' }}>
+                            {item.review_date || 'None'}
+                          </b>
+                        </div>
+                      </div>
+
+                      {/* Last Update Note if any */}
+                      {item.last_update && (
+                        <div style={{ fontSize: '11px', color: '#718096', marginBottom: '12px', background: '#f8fafc', padding: '6px 10px', borderRadius: '6px' }}>
+                          <strong>Last Update:</strong> {item.last_update}
+                        </div>
+                      )}
+
+                      {/* Actions */}
+                      <div className="review-action-row">
+                        <div style={{ fontSize: '11px', color: '#a0aec0' }}>
+                          Task ID: ACT-{String(item.task_id).padStart(4, '0')} · Meeting MTG-{String(item.meeting_id).padStart(4, '0')}
+                        </div>
+                        <div style={{ display: 'flex', gap: '8px' }}>
+                          <button
+                            className="secondary btn-sm"
+                            onClick={() => {
+                              const t = tasks.find((x) => x.id === item.task_id);
+                              if (t) editTask(t);
+                            }}
+                          >
+                            <Edit3 size={13} /> Full Edit
+                          </button>
+                          <button
+                            className="primary btn-sm"
+                            onClick={() => openQuickReviewModal(item)}
+                          >
+                            <RotateCcw size={13} /> Review & Follow Up
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <div className="empty panel">
+                  <p style={{ margin: '0 0 8px', fontWeight: 700, fontSize: '14px', color: '#2d3748' }}>
+                    No reviews matching '{reviewFilter.replace('_', ' ')}'.
+                  </p>
+                  <p style={{ margin: 0, fontSize: '12px', color: '#718096' }}>
+                    Tasks assigned with a review date will appear here automatically when their review milestone arrives.
+                  </p>
+                </div>
+              )}
+            </>
+          )}
+
+          {/* PAGE 4: MEETINGS (ALL & HISTORICAL MEETINGS) */}
+          {page === 'meetings' && (
+            <>
+              <div className="page-heading">
+                <div>
+                  <p className="eyebrow">MEETING REGISTER</p>
+                  <h1>Meetings (All & Historical)</h1>
+                  <p className="subheading">
+                    Complete meeting repository across all dates. Use to view past discussions or upcoming scheduled sessions.
+                  </p>
+                </div>
+                <div className="page-heading-actions">
+                  <button className="primary" onClick={() => openNewMeetingForDate()}>
+                    <Plus size={16} /> Record New Meeting
+                  </button>
+                </div>
+              </div>
+
+              {/* Meeting Filter Tabs */}
+              <div className="review-tab-bar">
+                <button
+                  className={`review-tab ${meetingFilter === 'all' ? 'active' : ''}`}
+                  onClick={() => setMeetingFilter('all')}
+                >
+                  All Meetings
+                </button>
+                <button
+                  className={`review-tab ${meetingFilter === 'today' ? 'active' : ''}`}
+                  onClick={() => setMeetingFilter('today')}
+                >
+                  Today's Meetings
+                </button>
+                <button
+                  className={`review-tab ${meetingFilter === 'upcoming' ? 'active' : ''}`}
+                  onClick={() => setMeetingFilter('upcoming')}
+                >
+                  Upcoming Scheduled
+                </button>
+                <button
+                  className={`review-tab ${meetingFilter === 'past' ? 'active' : ''}`}
+                  onClick={() => setMeetingFilter('past')}
+                >
+                  Past Meetings / Done
+                </button>
+              </div>
+
+              <div className="toolbar">
+                <div className="searchbox">
+                  <Search size={16} />
+                  <input
+                    placeholder="Search by meeting attendees, department, decisions..."
+                    value={query}
+                    onChange={(e) => setQuery(e.target.value)}
+                  />
+                </div>
+                <select value={filterDept} onChange={(e) => setFilterDept(e.target.value)}>
+                  <option>All Departments</option>
+                  {departments.map((d) => (
+                    <option key={d.id} value={d.name}>{d.name}</option>
+                  ))}
+                </select>
+              </div>
+
+              <section className="panel table-panel">
+                <MeetingTable
+                  meetings={filteredMeetings}
+                  onEdit={openEditMeeting}
+                  onDelete={(m) => setDeleteTarget({ type: 'meeting', id: m.id, name: m.meeting_with })}
+                  full
+                />
+              </section>
+            </>
+          )}
+
+          {/* PAGE 5: ACTION TRACKER */}
+          {page === 'tasks' && (
+            <>
+              <PageHeader
+                eyebrow="ACCOUNTABILITY"
+                title="Central Action Tracker"
+                description="Track ownership, progress, deadlines and scheduled review dates."
+                action="Assign task"
+                onAction={() => openNewTask()}
+              />
+              <div className="toolbar">
+                <div className="searchbox">
+                  <Search size={16} />
+                  <input
+                    placeholder="Search tasks, owners, departments, action required..."
+                    value={query}
+                    onChange={(e) => setQuery(e.target.value)}
+                  />
+                </div>
+                <select value={filterStatus} onChange={(e) => setFilterStatus(e.target.value)}>
+                  <option>All Status</option>
+                  {['Not Started', 'In Progress', 'Under Review', 'Completed', 'On Hold'].map((s) => (
+                    <option key={s}>{s}</option>
+                  ))}
+                </select>
+                <select value={filterDept} onChange={(e) => setFilterDept(e.target.value)}>
+                  <option>All Departments</option>
+                  {departments.map((d) => (
+                    <option key={d.id} value={d.name}>{d.name}</option>
+                  ))}
+                </select>
+              </div>
+              <section className="panel table-panel">
+                <TaskTable tasks={filteredTasks} onEdit={editTask} full />
+              </section>
+            </>
+          )}
+
+          {/* PAGE 6: DEPARTMENTS */}
+          {page === 'departments' && (
+            <>
+              <PageHeader
+                eyebrow="ORGANISATION"
+                title="Department Registers"
+                description="View task and meeting activity grouped by department."
+              />
+              <div className="department-grid">
+                {departments.map((d) => {
+                  const dt = tasks.filter((t) => t.department_id === d.id);
+                  const dm = meetings.filter((m) => m.department_id === d.id);
+                  return (
+                    <div
+                      className="department-card"
+                      key={d.id}
+                      onClick={() => {
+                        setPage('tasks');
+                        setFilterDept(d.name);
+                      }}
+                    >
+                      <div className="dept-icon"><Building2 size={20} /></div>
+                      <div>
+                        <h3>{d.name}</h3>
+                        <small>{dm.length} meetings · {dt.length} actions</small>
+                      </div>
+                      <div className="dept-count">
+                        <b>{dt.filter((t) => t.status !== 'Completed').length}</b>
+                        <small>open actions</small>
+                      </div>
+                      <ArrowUpRight size={16} />
+                    </div>
+                  );
+                })}
+              </div>
+            </>
+          )}
+
+          {/* PAGE 7: REPORTS */}
+          {page === 'reports' && (
+            <>
+              <PageHeader
+                eyebrow="REPORTING & EXPORTS"
+                title="Management Reports"
+                description="Export live meeting reviews, task tracking, and executive records."
+              />
+              <div className="report-grid">
+                <ReportCard
+                  icon={<FileSpreadsheet />}
+                  title="Previous Meeting Reviews (CSV)"
+                  desc="Detailed dataset of earlier meetings and tasks due for follow-up review."
+                  button="Download Reviews CSV"
+                  onClick={() => download('csv', 'reviews')}
+                />
+                <ReportCard
+                  icon={<FileSpreadsheet />}
+                  title="Central Action Tracker (CSV)"
+                  desc="Editable dataset with task owners, status, priority, deadlines and review dates."
+                  button="Download Tasks CSV"
+                  onClick={() => download('csv', 'tasks')}
+                />
+                <ReportCard
+                  icon={<ClipboardList />}
+                  title="Executive Action Tracker (PDF)"
+                  desc="A print-ready action tracker report for meetings and executive circulation."
+                  button="Download Tasks PDF"
+                  onClick={() => download('pdf', 'tasks')}
+                />
+                <ReportCard
+                  icon={<CalendarDays />}
+                  title="Departmental Review Summary"
+                  desc="High-level completion overview across all 12 operational departments."
+                  button="Export Available in Next Build"
+                  disabled
+                />
+              </div>
+            </>
+          )}
+        </div>
+      </main>
+
+      {/* MODAL 1: RECORD / EDIT MEETING */}
+      {modal === 'meeting' && (
+        <Modal
+          title={editId ? `Edit Meeting (MTG-${editId})` : 'Record Meeting'}
+          onClose={() => { setModal(''); setEditId(null); }}
+        >
+          <form onSubmit={saveMeeting} className="form-grid">
+            <Field label="Meeting Date">
+              <input
+                type="date"
+                required
+                value={meetingForm.meeting_date}
+                onChange={(e) => setMeetingForm({ ...meetingForm, meeting_date: e.target.value })}
+              />
+            </Field>
+            <Field label="Department">
+              <select
+                value={meetingForm.department_id}
+                onChange={(e) => setMeetingForm({ ...meetingForm, department_id: e.target.value })}
+              >
+                <option value="">Select department</option>
+                {departments.map((d) => (
+                  <option key={d.id} value={d.id}>{d.name}</option>
+                ))}
+              </select>
+            </Field>
+            <Field label="Start Time">
+              <input
+                type="time"
+                value={meetingForm.start_time}
+                onChange={(e) => setMeetingForm({ ...meetingForm, start_time: e.target.value })}
+              />
+            </Field>
+            <Field label="End Time">
+              <input
+                type="time"
+                value={meetingForm.end_time}
+                onChange={(e) => setMeetingForm({ ...meetingForm, end_time: e.target.value })}
+              />
+            </Field>
+            <Field label="Meeting With (Team / Person)" wide>
+              <input
+                required
+                placeholder="e.g. Operations Review Team, Warehouse Head, Buyer Representative..."
+                value={meetingForm.meeting_with}
+                onChange={(e) => setMeetingForm({ ...meetingForm, meeting_with: e.target.value })}
+              />
+            </Field>
+            <Field label="Meeting Type">
+              <select
+                value={meetingForm.meeting_type}
+                onChange={(e) => setMeetingForm({ ...meetingForm, meeting_type: e.target.value })}
+              >
+                {['Review', 'Operational', 'Strategic', 'Follow-up', 'Emergency', 'Other'].map((x) => (
+                  <option key={x}>{x}</option>
+                ))}
+              </select>
+            </Field>
+            <Field label="Location">
+              <input
+                placeholder="CEO Office, Boardroom, Online..."
+                value={meetingForm.location}
+                onChange={(e) => setMeetingForm({ ...meetingForm, location: e.target.value })}
+              />
+            </Field>
+            <Field label="Key Discussion Points" wide>
+              <textarea
+                rows={3}
+                placeholder="Summarize key topics reviewed during this meeting..."
+                value={meetingForm.discussion}
+                onChange={(e) => setMeetingForm({ ...meetingForm, discussion: e.target.value })}
+              />
+            </Field>
+            <Field label="Decisions Taken" wide>
+              <textarea
+                rows={3}
+                placeholder="Key executive decisions taken, policy approvals, or agreed directions..."
+                value={meetingForm.decisions}
+                onChange={(e) => setMeetingForm({ ...meetingForm, decisions: e.target.value })}
+              />
+            </Field>
+            <Field label="Next Scheduled Meeting / Review Date">
+              <input
+                type="date"
+                value={meetingForm.next_review_date}
+                onChange={(e) => setMeetingForm({ ...meetingForm, next_review_date: e.target.value })}
+              />
+            </Field>
+            <Field label="Recorded By">
+              <input
+                value={meetingForm.recorded_by}
+                onChange={(e) => setMeetingForm({ ...meetingForm, recorded_by: e.target.value })}
+              />
+            </Field>
+            <div className="form-actions">
+              <button type="button" className="secondary" onClick={() => { setModal(''); setEditId(null); }}>
+                Cancel
+              </button>
+              <button className="primary">{editId ? 'Save Changes' : 'Save Meeting'}</button>
+            </div>
+          </form>
+        </Modal>
+      )}
+
+      {/* MODAL 2: QUICK REVIEW & FOLLOW UP */}
+      {modal === 'quick_review' && activeReview && (
+        <Modal
+          title={`Follow-up & Review: ${activeReview.title}`}
+          onClose={() => { setModal(''); setActiveReview(null); }}
+        >
+          <div style={{ background: '#f8fafc', padding: '12px 14px', borderRadius: '8px', marginBottom: '16px', fontSize: '11px', color: '#4a5568' }}>
+            <div><strong>Originating Meeting:</strong> {activeReview.meeting_with} ({activeReview.meeting_date_display})</div>
+            <div style={{ marginTop: '3px' }}><strong>Action Required:</strong> {activeReview.action_required}</div>
+            <div style={{ marginTop: '3px' }}><strong>Responsible:</strong> {activeReview.assigned_to} · <strong>Accountable:</strong> {activeReview.accountable}</div>
+          </div>
+          <form onSubmit={saveQuickReview} className="form-grid">
+            <Field label="Current Progress %">
+              <input
+                type="number"
+                min="0"
+                max="100"
+                required
+                value={reviewForm.progress}
+                onChange={(e) => setReviewForm({ ...reviewForm, progress: e.target.value })}
+              />
+            </Field>
+            <Field label="Status">
+              <select
+                value={reviewForm.status}
+                onChange={(e) => setReviewForm({ ...reviewForm, status: e.target.value })}
+              >
+                {['In Progress', 'Under Review', 'Completed', 'On Hold', 'Not Started'].map((x) => (
+                  <option key={x}>{x}</option>
+                ))}
+              </select>
+            </Field>
+            <Field label="Schedule Next Follow-up Review Date (Optional)">
+              <input
+                type="date"
+                value={reviewForm.next_review_date}
+                onChange={(e) => setReviewForm({ ...reviewForm, next_review_date: e.target.value })}
+              />
+            </Field>
+            <Field label="Review Notes / Progress Logged Today" wide>
+              <textarea
+                rows={3}
+                required
+                placeholder="What progress was confirmed today? Are deliverables on track? Any bottlenecks discussed?"
+                value={reviewForm.review_notes}
+                onChange={(e) => setReviewForm({ ...reviewForm, review_notes: e.target.value })}
+              />
+            </Field>
+            <Field label="Executive Remarks / Directives" wide>
+              <textarea
+                rows={2}
+                placeholder="CEO remarks, directives, or conditions for closure..."
+                value={reviewForm.remarks}
+                onChange={(e) => setReviewForm({ ...reviewForm, remarks: e.target.value })}
+              />
+            </Field>
+            <div className="form-actions">
+              <button type="button" className="secondary" onClick={() => { setModal(''); setActiveReview(null); }}>
+                Cancel
+              </button>
+              <button className="primary">Confirm Review & Update</button>
+            </div>
+          </form>
+        </Modal>
+      )}
+
+      {/* MODAL 3: CREATE / EDIT TASK */}
+      {modal === 'task' && (
+        <Modal
+          title={editId ? 'Edit Action Item' : 'Assign New Action Item'}
+          onClose={() => { setModal(''); setEditId(null); }}
+        >
+          <form onSubmit={saveTask} className="form-grid">
+            <Field label="Task Title" wide>
+              <input
+                required
+                value={taskForm.title}
+                onChange={(e) => setTaskForm({ ...taskForm, title: e.target.value })}
+              />
+            </Field>
+            <Field label="Originating Meeting">
+              <select
+                value={taskForm.meeting_id}
+                onChange={(e) => setTaskForm({ ...taskForm, meeting_id: e.target.value })}
+              >
+                <option value="">Standalone Directive</option>
+                {meetings.map((m) => (
+                  <option value={m.id} key={m.id}>
+                    MTG-{m.id} · {m.meeting_with} ({m.meeting_date})
+                  </option>
+                ))}
+              </select>
+            </Field>
+            <Field label="Department">
+              <select
+                value={taskForm.department_id}
+                onChange={(e) => setTaskForm({ ...taskForm, department_id: e.target.value })}
+              >
+                <option value="">Select department</option>
+                {departments.map((d) => (
+                  <option key={d.id} value={d.id}>{d.name}</option>
+                ))}
+              </select>
+            </Field>
+            <Field label="Assigned To (Primary Owner)">
+              <input
+                value={taskForm.assigned_to}
+                onChange={(e) => setTaskForm({ ...taskForm, assigned_to: e.target.value })}
+              />
+            </Field>
+            <Field label="Accountable Authority (Head of Dept)">
+              <input
+                value={taskForm.accountable}
+                onChange={(e) => setTaskForm({ ...taskForm, accountable: e.target.value })}
+              />
+            </Field>
+            <Field label="Priority">
+              <select
+                value={taskForm.priority}
+                onChange={(e) => setTaskForm({ ...taskForm, priority: e.target.value })}
+              >
+                {['Low', 'Medium', 'High', 'Critical'].map((x) => (
+                  <option key={x}>{x}</option>
+                ))}
+              </select>
+            </Field>
+            <Field label="Status">
+              <select
+                value={taskForm.status}
+                onChange={(e) => setTaskForm({ ...taskForm, status: e.target.value })}
+              >
+                {['Not Started', 'In Progress', 'Under Review', 'Completed', 'On Hold'].map((x) => (
+                  <option key={x}>{x}</option>
+                ))}
+              </select>
+            </Field>
+            <Field label="Progress %">
+              <input
+                type="number"
+                min="0"
+                max="100"
+                value={taskForm.progress}
+                onChange={(e) => setTaskForm({ ...taskForm, progress: e.target.value })}
+              />
+            </Field>
+            <Field label="Final Deadline">
+              <input
+                type="date"
+                value={taskForm.deadline}
+                onChange={(e) => setTaskForm({ ...taskForm, deadline: e.target.value })}
+              />
+            </Field>
+            <Field label="Scheduled Follow-up Review Date">
+              <input
+                type="date"
+                value={taskForm.review_date}
+                onChange={(e) => setTaskForm({ ...taskForm, review_date: e.target.value })}
+              />
+            </Field>
+            <Field label="Discussion Background" wide>
+              <textarea
+                rows={2}
+                value={taskForm.discussion}
+                onChange={(e) => setTaskForm({ ...taskForm, discussion: e.target.value })}
+              />
+            </Field>
+            <Field label="Action Required (Clear Deliverable)" wide>
+              <textarea
+                rows={3}
+                value={taskForm.action_required}
+                onChange={(e) => setTaskForm({ ...taskForm, action_required: e.target.value })}
+              />
+            </Field>
+            <Field label="Remarks" wide>
+              <textarea
+                rows={2}
+                value={taskForm.remarks}
+                onChange={(e) => setTaskForm({ ...taskForm, remarks: e.target.value })}
+              />
+            </Field>
+            <div className="form-actions">
+              <button type="button" className="secondary" onClick={() => { setModal(''); setEditId(null); }}>
+                Cancel
+              </button>
+              <button className="primary">{editId ? 'Save Changes' : 'Assign Task'}</button>
+            </div>
+          </form>
+        </Modal>
+      )}
+
+      {/* MODAL 4: CREATE / EDIT DAILY JOURNAL ENTRY */}
+      {modal === 'daily' && (
+        <Modal
+          title={editId ? 'Edit Daily Entry' : 'Daily Executive Register Entry'}
+          onClose={() => { setModal(''); setEditId(null); }}
+        >
+          <form onSubmit={saveDaily} className="form-grid">
+            <Field label="Date">
+              <input
+                type="date"
+                required
+                value={dailyForm.entry_date}
+                onChange={(e) => setDailyForm({ ...dailyForm, entry_date: e.target.value })}
+              />
+            </Field>
+            <Field label="Time">
+              <input
+                type="time"
+                value={dailyForm.entry_time}
+                onChange={(e) => setDailyForm({ ...dailyForm, entry_time: e.target.value })}
+              />
+            </Field>
+            <Field label="Activity Type">
+              <select
+                value={dailyForm.activity_type}
+                onChange={(e) => setDailyForm({ ...dailyForm, activity_type: e.target.value })}
+              >
+                {['Discussion', 'Briefing', 'Meeting', 'Review', 'Visit', 'Decision', 'Other'].map((x) => (
+                  <option key={x}>{x}</option>
+                ))}
+              </select>
+            </Field>
+            <Field label="Person / Team Met">
+              <input
+                value={dailyForm.person_met}
+                onChange={(e) => setDailyForm({ ...dailyForm, person_met: e.target.value })}
+              />
+            </Field>
+            <Field label="Department">
+              <select
+                value={dailyForm.department_id}
+                onChange={(e) => setDailyForm({ ...dailyForm, department_id: e.target.value })}
+              >
+                <option value="">Select department</option>
+                {departments.map((d) => (
+                  <option key={d.id} value={d.id}>{d.name}</option>
+                ))}
+              </select>
+            </Field>
+            <Field label="Follow-up Required">
+              <select
+                value={dailyForm.follow_up_required}
+                onChange={(e) => setDailyForm({ ...dailyForm, follow_up_required: e.target.value })}
+              >
+                <option>No</option>
+                <option>Yes</option>
+              </select>
+            </Field>
+            <Field label="Follow-up Review Date">
+              <input
+                type="date"
+                value={dailyForm.review_date}
+                onChange={(e) => setDailyForm({ ...dailyForm, review_date: e.target.value })}
+              />
+            </Field>
+            <Field label="Discussion Points" wide>
+              <textarea
+                rows={3}
+                value={dailyForm.discussion}
+                onChange={(e) => setDailyForm({ ...dailyForm, discussion: e.target.value })}
+              />
+            </Field>
+            <Field label="Decision Taken" wide>
+              <textarea
+                rows={3}
+                value={dailyForm.decision}
+                onChange={(e) => setDailyForm({ ...dailyForm, decision: e.target.value })}
+              />
+            </Field>
+            <div className="form-actions">
+              <button type="button" className="secondary" onClick={() => { setModal(''); setEditId(null); }}>
+                Cancel
+              </button>
+              <button className="primary">{editId ? 'Save Changes' : 'Save Entry'}</button>
+            </div>
+          </form>
+        </Modal>
+      )}
+
+      {/* MODAL 5: DELETE CONFIRMATION MODAL */}
+      {deleteTarget && (
+        <Modal
+          title={`Confirm Permanent Deletion`}
+          onClose={() => setDeleteTarget(null)}
+        >
+          <div style={{ padding: '6px 0 16px' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '10px', color: '#c53030', marginBottom: '12px' }}>
+              <AlertTriangle size={24} />
+              <strong style={{ fontSize: '15px' }}>
+                Are you sure you want to permanently delete this {deleteTarget.type}?
+              </strong>
+            </div>
+            <p style={{ margin: '0 0 10px', fontSize: '13px', color: '#4a5568' }}>
+              Record: <strong>{deleteTarget.name}</strong> (ID: {deleteTarget.id})
+            </p>
+            <p style={{ margin: 0, fontSize: '12px', color: '#718096', lineHeight: 1.5 }}>
+              {deleteTarget.type === 'meeting'
+                ? 'Deleting this meeting will also remove tasks specifically tied to it. Unrelated meetings and historical data will not be affected.'
+                : 'This action cannot be undone and will be logged in the system audit trail.'}
+            </p>
+          </div>
+          <div className="form-actions">
+            <button className="secondary" onClick={() => setDeleteTarget(null)}>Cancel</button>
+            <button className="danger-btn solid" onClick={confirmDelete}>
+              <Trash2 size={15} /> Yes, Delete Record
+            </button>
+          </div>
+        </Modal>
+      )}
+    </div>
+  );
+}
+
+// Subcomponents
+function Metric({ label, value, icon, accent, note }) {
+  return (
+    <div className={`metric ${accent}`}>
+      <div className="metric-top">
+        <span>{label}</span>
+        <div className="metric-icon">{icon}</div>
+      </div>
+      <div className="metric-value">{value}</div>
+      <div className="metric-note">{note}</div>
+    </div>
+  );
+}
+
+function PageHeader({ eyebrow, title, description, action, onAction }) {
+  return (
+    <div className="page-heading">
+      <div>
+        <p className="eyebrow">{eyebrow}</p>
+        <h1>{title}</h1>
+        <p className="subheading">{description}</p>
+      </div>
+      {action && (
+        <button className="primary" onClick={onAction}>
+          <Plus size={16} /> {action}
+        </button>
+      )}
+    </div>
+  );
+}
+
+function TaskTable({ tasks, onEdit, full }) {
+  return (
+    <div className="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Task / Action</th>
+            <th>Department</th>
+            <th>Assigned To</th>
+            <th>Priority</th>
+            <th>Status</th>
+            <th>Progress</th>
+            <th>Deadline</th>
+            {full && <th>Review Date</th>}
+          </tr>
+        </thead>
+        <tbody>
+          {tasks.map((t) => (
+            <tr key={t.id} onClick={() => onEdit(t)}>
+              <td>
+                <div className="task-title">
+                  <b>{t.title}</b>
+                  <small>ACT-{String(t.id).padStart(4, '0')}{t.meeting_id ? ` · MTG-${t.meeting_id}` : ''}</small>
+                </div>
+              </td>
+              <td>{t.department?.name || '—'}</td>
+              <td>{t.assigned_to || '—'}</td>
+              <td><span className={`priority ${t.priority.toLowerCase()}`}>{t.priority}</span></td>
+              <td><span className={`status ${statusClass(t.status)}`}>{t.status}</span></td>
+              <td>
+                <div className="mini-progress">
+                  <div><span style={{ width: `${t.progress || 0}%` }} /></div>
+                  <small>{t.progress || 0}%</small>
+                </div>
+              </td>
+              <td>{t.deadline || '—'}</td>
+              {full && <td>{t.review_date || '—'}</td>}
+            </tr>
+          ))}
+          {!tasks.length && (
+            <tr>
+              <td colSpan={full ? 8 : 7} className="empty">No tasks found matching criteria.</td>
+            </tr>
+          )}
+        </tbody>
+      </table>
+    </div>
+  );
+}
+
+function MeetingTable({ meetings, onEdit, onDelete, full }) {
+  return (
+    <div className="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Meeting Attendees</th>
+            <th>Date & Time</th>
+            <th>Department</th>
+            <th>Meeting Type</th>
+            <th>Tasks Generated</th>
+            <th style={{ textAlign: 'right' }}>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          {meetings.map((m) => (
+            <tr key={m.id}>
+              <td>
+                <div className="task-title" onClick={() => onEdit(m)} style={{ cursor: 'pointer' }}>
+                  <b>{m.meeting_with}</b>
+                  <small>MTG-{String(m.id).padStart(4, '0')} · {m.location || 'CEO Office'}</small>
+                </div>
+              </td>
+              <td>
+                {m.meeting_date}
+                <small className="cell-sub">{m.start_time || '—'}{m.end_time ? ` – ${m.end_time}` : ''}</small>
+              </td>
+              <td>{m.department?.name || '—'}</td>
+              <td><span className="tag-pill type">{m.meeting_type}</span></td>
+              <td><span className="tag-pill">{m.tasks?.length ?? 0} actions</span></td>
+              <td style={{ textAlign: 'right' }}>
+                <div style={{ display: 'inline-flex', gap: '6px' }}>
+                  <button className="secondary btn-sm" onClick={() => onEdit(m)} title="Edit Meeting">
+                    <Edit3 size={13} />
+                  </button>
+                  <button className="danger-btn btn-sm" onClick={() => onDelete(m)} title="Delete Meeting">
+                    <Trash2 size={13} />
+                  </button>
+                </div>
+              </td>
+            </tr>
+          ))}
+          {!meetings.length && (
+            <tr>
+              <td colSpan={6} className="empty">No meeting records found.</td>
+            </tr>
+          )}
+        </tbody>
+      </table>
+    </div>
+  );
+}
+
+function DailyTable({ daily, onEdit, onDelete }) {
+  return (
+    <div className="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Date & Time</th>
+            <th>Activity</th>
+            <th>Person Met</th>
+            <th>Department</th>
+            <th>Follow-up</th>
+            <th>Review Date</th>
+            <th style={{ textAlign: 'right' }}>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          {daily.map((d) => (
+            <tr key={d.id}>
+              <td>
+                {d.entry_date}
+                <small className="cell-sub">{d.entry_time || '—'}</small>
+              </td>
+              <td><span className="tag-pill type">{d.activity_type}</span></td>
+              <td>
+                <div className="task-title" onClick={() => onEdit(d)} style={{ cursor: 'pointer' }}>
+                  <b>{d.person_met || '—'}</b>
+                  <small>{d.discussion}</small>
+                </div>
+              </td>
+              <td>{d.department?.name || '—'}</td>
+              <td>{d.follow_up_required}</td>
+              <td>{d.review_date || '—'}</td>
+              <td style={{ textAlign: 'right' }}>
+                <div style={{ display: 'inline-flex', gap: '6px' }}>
+                  <button className="secondary btn-sm" onClick={() => onEdit(d)}>
+                    <Edit3 size={13} />
+                  </button>
+                  <button className="danger-btn btn-sm" onClick={() => onDelete(d)}>
+                    <Trash2 size={13} />
+                  </button>
+                </div>
+              </td>
+            </tr>
+          ))}
+          {!daily.length && (
+            <tr>
+              <td colSpan={7} className="empty">No daily entries found.</td>
+            </tr>
+          )}
+        </tbody>
+      </table>
+    </div>
+  );
+}
+
+function ReportCard({ icon, title, desc, button, onClick, disabled }) {
+  return (
+    <div className="report-card">
+      <div className="report-icon">{icon}</div>
+      <h3>{title}</h3>
+      <p>{desc}</p>
+      <button className={disabled ? 'secondary' : 'primary'} disabled={disabled} onClick={onClick}>
+        {button}
+      </button>
+    </div>
+  );
+}
+
+function Field({ label, children, wide }) {
+  return (
+    <label className={`field ${wide ? 'wide' : ''}`}>
+      <span>{label}</span>
+      {children}
+    </label>
+  );
+}
+
+function Modal({ title, children, onClose }) {
+  return (
+    <div className="modal-backdrop" onMouseDown={(e) => { if (e.target === e.currentTarget) onClose(); }}>
+      <div className="modal">
+        <div className="modal-head">
+          <h2>{title}</h2>
+          <button className="icon-btn" onClick={onClose}><X size={18} /></button>
+        </div>
+        {children}
+      </div>
+    </div>
+  );
+}
+
+createRoot(document.getElementById('root')).render(<App />);
+  </script>
+</body>
+</html>
