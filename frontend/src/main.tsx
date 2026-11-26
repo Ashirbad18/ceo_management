@@ -1451,6 +1451,26 @@ function App() {
                   button="Export Available in Next Build"
                   disabled
                 />
+                <ReportCard
+                  icon={<Trash2 color="#dc3545" />}
+                  title="Clear All Testing / Demo Data"
+                  desc="Permanently wipe all demo meetings and dummy tasks so your system remains completely clean."
+                  button="Purge Testing Data"
+                  onClick={async () => {
+                    if (window.confirm("Are you sure you want to permanently clear all demo/testing data? Your database will be completely fresh and clean.")) {
+                      try {
+                        await fetch(`${API}/admin/clear-demo-data`, {
+                          method: 'POST',
+                          headers: { Authorization: `Bearer ${token}` }
+                        });
+                        alert("Testing data cleared! System is now completely clean.");
+                        refresh();
+                      } catch (err: any) {
+                        setError(err.message);
+                      }
+                    }
+                  }}
+                />
               </div>
             </>
           )}

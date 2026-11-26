@@ -11,6 +11,6 @@ services:
       - key: CMAS_SECRET_KEY
         generateValue: true
       - key: CMAS_DEMO_DATA
-        value: "1"
+        value: "0"
       - key: DATABASE_URL
         value: sqlite:///./data/cmas.db

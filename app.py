@@ -161,6 +161,11 @@ class AuditLog(Base):
     details = Column(Text, default="")
     created_at = Column(DateTime, default=datetime.utcnow)
 
+class SystemConfig(Base):
+    __tablename__ = "system_configs"
+    key = Column(String(100), primary_key=True)
+    value = Column(String(255), default="")
+
 Base.metadata.create_all(engine)
 
 DEFAULT_DEPARTMENTS = ["Operations", "Merchandising", "NPD", "Purchase", "Store & Warehouse", "Quality", "Finance", "HR", "Administration", "Export & Sales", "Production", "General Management"]
@@ -239,8 +244,18 @@ def seed():
                 db.add(Department(name=name))
         db.commit()
 
-        # Seed rich realistic demo data if enabled
-        if os.getenv("CMAS_DEMO_DATA", "1").lower() in ("1", "true", "yes") and db.query(Meeting).count() == 0:
+        # Check if system has ever been initialized before
+        seed_marker = db.query(SystemConfig).filter_by(key="initial_seed_done").first()
+        if seed_marker:
+            # System was already initialized! Never re-seed or overwrite user's deletions.
+            return
+
+        # Record persistent marker so demo data is NEVER re-inserted after being deleted
+        db.add(SystemConfig(key="initial_seed_done", value="true"))
+        db.commit()
+
+        # Seed rich realistic demo data ONLY if explicitly enabled (default is "0" / clean)
+        if os.getenv("CMAS_DEMO_DATA", "0").lower() in ("1", "true", "yes") and db.query(Meeting).count() == 0:
             depmap = {d.name: d.id for d in db.query(Department).all()}
             today = date.today()
 
@@ -535,6 +550,21 @@ def me(user: User = Depends(get_user)):
 @app.get("/api/departments")
 def departments(db: Session = Depends(get_db), user: User = Depends(get_user)):
     return [serialize_department(d) for d in db.query(Department).order_by(Department.name).all()]
+
+@app.post("/api/admin/clear-demo-data")
+def clear_demo_data(db: Session = Depends(get_db), user: User = Depends(get_user)):
+    """Wipes all meetings, tasks, and daily entries so the system starts completely clean."""
+    db.query(ProgressNote).delete()
+    db.query(Task).delete()
+    db.query(Meeting).delete()
+    db.query(DailyEntry).delete()
+    # Ensure seed marker is saved so it NEVER re-seeds demo data again
+    marker = db.query(SystemConfig).filter_by(key="initial_seed_done").first()
+    if not marker:
+        db.add(SystemConfig(key="initial_seed_done", value="true"))
+    log(db, user, "system", 0, "purge", "Cleared all demo and testing data")
+    db.commit()
+    return {"ok": True, "message": "All testing data successfully cleared. Fresh empty database ready."}
 
 # =========================================================================
 # 1. DAILY CEO REGISTER (Date-Based Meeting Management)
